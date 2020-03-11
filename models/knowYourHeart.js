@@ -50,6 +50,9 @@ const KYHData = mongoose.model('KYH_data', {
     diet: {
         type: [Number]
     },
+    ageGrp: {
+        type: Number
+    },
     userID: {
         type: String
     },
