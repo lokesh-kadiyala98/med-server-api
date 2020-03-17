@@ -6,19 +6,6 @@ const MongoClient = mongodb.MongoClient;
 const DBurl = 'mongodb://localhost:27017';
 
 function getDiseaseSymptoms(req, res) {
-    // csv()
-    // .fromFile('disease_symptoms.csv')
-    // .then((jsonObj)=>{
-    //     var disease = {}
-    //     jsonObj.forEach((obj) => {
-    //         if(obj['Disease'] !== '') {
-    //             diseaseName = obj['Disease']
-    //             disease[diseaseName] = { 'symptoms': [], 'occurence': obj['Occurrence']}
-    //             disease[obj['Disease']].symptoms.push(obj['Symptom'])
-    //         } else {
-    //             disease[diseaseName].symptoms.push(obj['Symptom'])
-    //         }
-    //     })
     MongoClient.connect(DBurl, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
