@@ -1,6 +1,4 @@
 const mongodb = require('mongodb')
-const express = require('express')
-const csv = require('csvtojson')
 const MongoClient = mongodb.MongoClient;
 
 const DBurl = 'mongodb://localhost:27017';
@@ -21,7 +19,6 @@ function getDiseaseSymptoms(req, res) {
             })
         }
     })
-    //})
 }
 
 function getUniqueSymptoms(req, res) {
