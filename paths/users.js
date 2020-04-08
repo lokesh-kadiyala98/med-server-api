@@ -55,4 +55,22 @@ router.post('/user_login', (req, res) => {
     })
 })
 
+router.post('/admin_login', (req, res) => {
+    MongoClient.connect(DBurl, async (err, client) => {
+        if (err)
+            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
+        else {
+            const db = client.db('med')
+            const admin = await db.collection('admin').findOne({ $and: [{ username: req.body.username }, {password: req.body.password}] })
+            if(admin)
+                jwt.sign({admin}, 'sushh', (err, token) => {
+                    return res.status(200).send({token})
+                })
+            else {
+                res.status(400).send({ error: 'Username and Password doesn\'t match'})
+            }
+        }
+    })
+})
+
 module.exports = router
