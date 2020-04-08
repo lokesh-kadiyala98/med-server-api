@@ -11,6 +11,7 @@ var disease_symptoms = require('../paths/disease_symptoms')
 var users = require('../paths/users')
 var kyh = require('../paths/kyh')
 var pharma = require('../paths/pharma')
+var corona_stats = require('../paths/corona_stats')
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello, app.js</h1>')
@@ -23,6 +24,8 @@ app.use('/users', users)
 app.use('/kyh', kyh)
 
 app.use('/pharma', pharma)
+
+app.use('/corona_stats', corona_stats)
 
 app.listen(PORT, () => {
     console.log('Example app listening on port ', PORT)
