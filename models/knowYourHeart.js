@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 const DBurl = 'mongodb://localhost:27017';
 
@@ -61,6 +61,4 @@ const KYHData = mongoose.model('KYH_data', {
     }
 })
 
-
-
-module.exports = KYHData
+module.exports =  KYHData

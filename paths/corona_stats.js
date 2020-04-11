@@ -50,16 +50,16 @@ function updateData() {
             for (let index = 0; index < states.length - 1; index++) {
                 let obj = {
                     state: states[index],
-                    cases: cases[index],
-                    cured: cured[index],
-                    deceased: deceased[index]
+                    cases: parseInt(cases[index]),
+                    cured: parseInt(cured[index]),
+                    deceased: parseInt(deceased[index])
                 }
                 MongoClient.connect(DBurl, (err, client) => {
                     if (err)
                         reject({ error: 'Database Connection: Seems like something went wrong!!' })
                     else {
                         const db = client.db('med')
-                        db.collection('corona_state_wise_break_down').updateOne({state: states[index]}, {$set: obj}, (err, res) => {
+                        db.collection('corona_data_in_states').updateOne({state: states[index]}, {$set: obj}, (err, res) => {
                             if (err) reject(err)
                         })
                     }
@@ -70,9 +70,25 @@ function updateData() {
     })
 }
 
-router.get('/get_corona_state_wise_data', async (req, res) => {
+router.get('/update_corona_state_wise_data', async (req, res) => {
     const result = await updateData()
     res.send(result)
+})
+
+router.get('/get_corona_state_wise_data', async (req, res) => {
+    MongoClient.connect(DBurl, (err, client) => {
+        if (err)
+            reject({ error: 'Database Connection: Seems like something went wrong!!' })
+        else {
+            const db = client.db('med')
+            db.collection('corona_data_in_states').find().toArray((err, items) => {
+                if(err)
+                    res.status(400).send({ error: err.message })
+                else
+                    res.status(200).send({ items })
+            })
+        }
+    })
 })
 
 module.exports = router

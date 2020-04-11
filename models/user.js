@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 const DBurl = 'mongodb://localhost:27017';
 
