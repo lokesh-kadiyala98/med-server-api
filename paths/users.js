@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/user_register', (req, res) => {
-    MongoClient.connect(DBurl, async (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -38,7 +38,7 @@ router.post('/user_register', (req, res) => {
 })
 
 router.post('/user_login', (req, res) => {
-    MongoClient.connect(DBurl, async (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -56,7 +56,7 @@ router.post('/user_login', (req, res) => {
 })
 
 router.post('/admin_login', (req, res) => {
-    MongoClient.connect(DBurl, async (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {

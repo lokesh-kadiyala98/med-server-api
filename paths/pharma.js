@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/get_unique_medicines', (req, res) => {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -27,7 +27,7 @@ router.get('/get_unique_medicines', (req, res) => {
 })
 
 router.get('/get_unique_brands', (req, res) => {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -44,7 +44,7 @@ router.get('/get_unique_brands', (req, res) => {
 })
 
 router.get('/get_medicine_timeseries_data', (req, res) => {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -102,7 +102,7 @@ router.get('/get_medicine_timeseries_data', (req, res) => {
 
 
 router.get('/get_brand_timeseries_data', (req, res) => {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {

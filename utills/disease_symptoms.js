@@ -4,7 +4,7 @@ const MongoClient = mongodb.MongoClient;
 const DBurl = 'mongodb://localhost:27017';
 
 function getDiseaseSymptoms(req, res) {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -22,7 +22,7 @@ function getDiseaseSymptoms(req, res) {
 }
 
 function getUniqueSymptoms(req, res) {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -39,7 +39,7 @@ function getUniqueSymptoms(req, res) {
 }
 
 function getDiseaseSymptomsModel(req, res) {
-    MongoClient.connect(DBurl, (err, client) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
@@ -61,7 +61,7 @@ function getRelatedSymptoms(req, res) {
         queryString += req.body.symptoms.split(', ').join('"}, {"symptoms":"')
         queryString += '"}]}'
         
-        MongoClient.connect(DBurl, (err, client) => {
+        MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
             if (err)
                 res.send({ error: 'Database Connection: Seems like something went wrong!!' })
             else {
