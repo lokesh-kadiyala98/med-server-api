@@ -1,3 +1,3 @@
 {
-    "DBurl": "mongodb://localhost:27017"
+    "DBurl": "mongodb+srv://lokesh:jyothi123@cluster0-9dwt7.mongodb.net/test?retryWrites=true&w=majority"
 }
