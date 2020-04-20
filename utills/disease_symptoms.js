@@ -1,7 +1,9 @@
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient;
 
-const DBurl = 'mongodb://localhost:27017';
+const config = require('../src/config.json')
+
+const DBurl = config.DBurl;
 
 function getDiseaseSymptoms(req, res) {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {

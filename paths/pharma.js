@@ -3,7 +3,9 @@ const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
 
-const DBurl = 'mongodb://localhost:27017';
+const config = require('../src/config.json')
+
+const DBurl = config.DBurl;
 
 router.get('/', (req, res) => {
     res.send('<h1>Hello, pharma.js</h1>')

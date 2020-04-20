@@ -3,11 +3,12 @@ const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
+
 const User = require('../models/user')
 const KYHData = require('../models/knowYourHeart')
+const config = require('../src/config.json')
 
-const DBurl = 'mongodb://localhost:27017';
-
+const DBurl = config.DBurl;
 
 router.get('/', (req, res) => {
     res.send('<h1>Hello, users.js</h1>')

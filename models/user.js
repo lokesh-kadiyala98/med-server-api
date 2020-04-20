@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 
-const DBurl = 'mongodb://localhost:27017';
+const config = require('../src/config.json')
+
+const DBurl = config.DBurl;
 
 mongoose.connect(DBurl + '/med', {
     useNewUrlParser: true,
