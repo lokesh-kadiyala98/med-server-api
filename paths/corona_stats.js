@@ -28,7 +28,39 @@ router.get('/get_data', (req, res) => {
     })
 })
 
-schedule.scheduleJob('9 8 * * *', async () => {
+router.get('/get_unique_states', (req, res) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
+        if (err)
+            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
+        else {
+            const db = client.db('med')
+            db.collection('corona_data_in_states').distinct('state', (err, items) => {
+                if(err)
+                    res.status(400).send({ error: err.message })
+                else
+                    res.status(200).send(items)
+            })
+        }
+    })
+})
+
+router.get('/get_state_data', (req, res) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
+        if (err)
+            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
+        else {
+            const db = client.db('med')
+            db.collection('corona_data_in_states').find({ state: req.query.state }).toArray((err, items) => {
+                if(err)
+                    res.status(400).send({ error: err.message })
+                else
+                    res.status(200).send(items)
+            })
+        }
+    })
+})
+
+schedule.scheduleJob('59 10 * * *', async () => {
     const result = await updateINData()
 
     console.log(result)
@@ -74,7 +106,7 @@ function updateINData() {
                     }
                 })
             }
-            resolve({status: 200, message: 'No errors'})
+            resolve({status: 200, message: 'No errors', source: 'update_state_wise_data'})
         })
     })
 }
