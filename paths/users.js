@@ -4,8 +4,6 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 
-const User = require('../models/user')
-const KYHData = require('../models/knowYourHeart')
 const config = require('../src/config.json')
 
 const DBurl = config.DBurl;
@@ -24,21 +22,16 @@ router.post('/user_register', (req, res) => {
             if(user)
                 return res.status(400).send({ error: 'User already exists' })
             else {
-                const user = new User(req.body, {
-                    writeConcern: {
-                      w: 'majority',
-                      wtimeout: 5000
+                db.collection("users").insertOne(req.body, async (err) => {
+                    if (err)
+                        res.status(400).send({ error: err.message })
+                    else{
+                        const user = await db.collection('users').findOne({ $and: [{ username: req.body.username }, {password: req.body.password}] })
+                        if(user)
+                            jwt.sign({user}, 'sushh', (err, token) => {
+                                return res.status(200).send({token})
+                            })
                     }
-                })
-
-                console.log(user)
-
-                user.save().then(() => {
-                    jwt.sign({user}, 'sushh', (err, token) => {
-                        res.send({token})
-                    })
-                }).catch((err) => {
-                    res.status(400).send({ error: err.message})
                 })
             }
         }

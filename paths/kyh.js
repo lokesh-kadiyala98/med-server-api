@@ -3,7 +3,6 @@ const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
 
-const KYHData = require('../models/knowYourHeart')
 const config = require('../src/config.json')
 
 const DBurl = config.DBurl;
@@ -17,11 +16,12 @@ router.post('/kyh_save_data', (req, res) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
-            const kyh = new KYHData(req.body)
-            kyh.save().then(() => {
-                res.status(200).send({ message: 'Data Saved!!' })
-            }).catch((err) => {
-                res.status(400).send({ error: err.message })
+            const db = client.db('med')
+            db.collection("kyh_datas").insertOne(req.body, (err) => {
+                if (err)
+                    res.status(400).send({ error: err.message })
+                else
+                    res.status(200).send({ message: 'Data Saved!!' })
             })
         }
         
