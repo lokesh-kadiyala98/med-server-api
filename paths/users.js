@@ -24,7 +24,14 @@ router.post('/user_register', (req, res) => {
             if(user)
                 return res.status(400).send({ error: 'User already exists' })
             else {
-                const user = new User(req.body)
+                const user = new User(req.body, {
+                    writeConcern: {
+                      w: 'majority',
+                      wtimeout: 5000
+                    }
+                })
+
+                console.log(user)
 
                 user.save().then(() => {
                     jwt.sign({user}, 'sushh', (err, token) => {
