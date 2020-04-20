@@ -16,7 +16,7 @@ var pharma = require('../paths/pharma')
 var corona_stats = require('../paths/corona_stats')
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello, app.js</h1>')
+    res.send('<h1>Hello, app.js --production build</h1>')
 });
 
 app.use('/disease_symptoms', disease_symptoms)

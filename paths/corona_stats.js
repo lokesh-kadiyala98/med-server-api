@@ -11,7 +11,7 @@ const config = require('../src/config.json')
 const DBurl = config.DBurl;
 
 router.get('/', (req, res) => {
-    res.send('<h1>Hello, corona_stats.js from production</h1>')
+    res.send('<h1>Hello, corona_stats.js</h1>')
 });
 
 router.get('/get_data', (req, res) => {
