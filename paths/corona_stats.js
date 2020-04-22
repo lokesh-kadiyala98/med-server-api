@@ -163,10 +163,32 @@ router.get('/update_state_wise_data', async (req, res) => {
     res.send(result)
 })
 
+router.get('/update_data', (req, res) => {
+    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
+        if(err)
+            res.send({ erros: err.message })
+        else {
+            const db = client.db('med')
+            db.collection('corona_cases_data').insertOne({
+                                                            totalCases: req.cases, 
+                                                            totalDeaths: req.deaths,
+                                                            recoveredOnDay: req.recovered,
+                                                            date: req.date    
+                                                        }, (err) => {
+                if (err)
+                    res.send({ error: err.message })
+                else    
+                    res.send({ status: 200, message: 'No errors'})
+            })
+        }    
+
+    })
+})
+
 router.get('/get_state_wise_data', async (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
-            reject({ error: 'Database Connection: Seems like something went wrong!!' })
+            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
             const db = client.db('med')
             db.collection('corona_data_in_states').find().toArray((err, items) => {
