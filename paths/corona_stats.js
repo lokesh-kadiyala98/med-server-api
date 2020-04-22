@@ -164,10 +164,6 @@ router.get('/update_state_wise_data', async (req, res) => {
 })
 
 router.get('/update_data', (req, res) => {
-    // if(req.query.cases === undefined || req.query.deaths === undefined || req.query.recovered === undefined || req.query.date === undefined)
-    //     res.send({ error: 'Some field(s) are missing'})
-    // else
-    //     res.send(req.query)
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if(err)
             res.send({ error: err.message })
