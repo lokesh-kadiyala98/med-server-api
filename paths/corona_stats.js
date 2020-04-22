@@ -166,15 +166,12 @@ router.get('/update_state_wise_data', async (req, res) => {
 router.get('/update_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if(err)
-            res.send({ erros: err.message })
+            res.send({ error: err.message })
         else {
             const db = client.db('med')
-            db.collection('corona_cases_data').insertOne({
-                                                            totalCases: req.cases, 
-                                                            totalDeaths: req.deaths,
-                                                            recoveredOnDay: req.recovered,
-                                                            date: req.date    
-                                                        }, (err) => {
+            if(req.cases === null || req.deaths === null || req.recovered === null || req.date === null)
+                res.send({ error: 'Some field(s) are missing'})
+            db.collection('corona_cases_data').insertOne({ totalCases: req.cases, totalDeaths: req.deaths, recoveredOnDay: req.recovered, date: req.date }, (err) => {
                 if (err)
                     res.send({ error: err.message })
                 else    
