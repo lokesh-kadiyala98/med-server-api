@@ -171,7 +171,7 @@ router.get('/update_data', (req, res) => {
             const db = client.db('med')
             if(req.cases === null || req.deaths === null || req.recovered === null || req.date === null)
                 res.send({ error: 'Some field(s) are missing'})
-            db.collection('corona_cases_data').insertOne({ totalCases: req.cases, totalDeaths: req.deaths, recoveredOnDay: req.recovered, date: req.date }, (err) => {
+            db.collection('corona_cases_data').insertOne({ totalCases: parseInt(req.cases), totalDeaths: parseInt(req.deaths), recoveredOnDay: parseInt(req.recovered), date: req.date }, (err) => {
                 if (err)
                     res.send({ error: err.message })
                 else    
