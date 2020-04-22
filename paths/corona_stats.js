@@ -164,22 +164,23 @@ router.get('/update_state_wise_data', async (req, res) => {
 })
 
 router.get('/update_data', (req, res) => {
-    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
-        if(err)
-            res.send({ error: err.message })
-        else {
-            const db = client.db('med')
-            if(req.cases === null || req.deaths === null || req.recovered === null || req.date === null)
-                res.send({ error: 'Some field(s) are missing'})
-            db.collection('corona_cases_data').insertOne({ totalCases: parseInt(req.cases), totalDeaths: parseInt(req.deaths), recoveredOnDay: parseInt(req.recovered), date: req.date }, (err) => {
-                if (err)
-                    res.send({ error: err.message })
-                else    
-                    res.send({ status: 200, message: 'No errors'})
-            })
-        }    
+    res.send(req.query)
+    // MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
+    //     if(err)
+    //         res.send({ error: err.message })
+    //     else {
+    //         const db = client.db('med')
+    //         if(req.query.cases === null || req.query.deaths === null || req.query.recovered === null || req.query.date === null)
+    //             res.send({ error: 'Some field(s) are missing'})
+    //         db.collection('corona_cases_data').insertOne({ totalCases: parseInt(req.query.cases), totalDeaths: parseInt(req.query.deaths), recoveredOnDay: parseInt(req.query.recovered), date: req.query.date }, (err) => {
+    //             if (err)
+    //                 res.send({ error: err.message })
+    //             else    
+    //                 res.send({ status: 200, message: 'No errors'})
+    //         })
+    //     }    
 
-    })
+    // })
 })
 
 router.get('/get_state_wise_data', async (req, res) => {
