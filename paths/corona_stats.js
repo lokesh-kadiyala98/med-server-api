@@ -186,7 +186,7 @@ router.get('/get_state_wise_data', async (req, res) => {
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
             const db = client.db('med')
-            db.collection('corona_data_in_states').find().toArray((err, items) => {
+            db.collection('corona_data_in_states').find().sort({state: 1}).toArray((err, items) => {
                 if(err)
                     res.status(400).send({ error: err.message })
                 else
