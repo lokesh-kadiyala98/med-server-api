@@ -20,7 +20,27 @@ router.get('/get_data', (req, res) => {
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
             const db = client.db('med')
-            db.collection('corona_cases_data').find().toArray((err, items) => {
+            db.collection('corona_cases_data').aggregate([
+                {
+                    $project: {
+                        totalCases: 1, 
+                        totalDeaths: 1, 
+                        recoveredOnDay: 1, 
+                        date: 1,
+                        day: {
+                            $substr: ['$date', 0, 2]
+                        },
+                        month: {
+                            $substr: ['$date', 3, 2]
+                        }
+                    }
+                }, {
+                    $sort: {
+                        month: 1, 
+                        day: 1
+                    }
+                }
+            ]).toArray((err, items) => {
                 if(err)
                     res.status(400).send({ error: err.message })
                 else
