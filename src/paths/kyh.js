@@ -2,13 +2,8 @@ const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
-
  
 const DBurl =  process.env.DBurl;
-
-router.get('/', (req, res) => {
-    res.send('<h1>Hello, kyh.js</h1>')
-});
 
 router.post('/kyh_save_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {

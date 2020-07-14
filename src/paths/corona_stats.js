@@ -6,12 +6,7 @@ const cheerio = require('cheerio')
 const request = require('request')
 const schedule = require('node-schedule')
 
- 
 const DBurl =  process.env.DBurl;
-
-router.get('/', (req, res) => {
-    res.send('<h1>Hello, corona_stats.js</h1>')
-});
 
 router.get('/get_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {

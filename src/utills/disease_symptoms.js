@@ -1,7 +1,6 @@
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient;
 
- 
 const DBurl =  process.env.DBurl;
 
 function getDiseaseSymptoms(req, res) {

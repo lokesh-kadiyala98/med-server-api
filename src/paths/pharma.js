@@ -1,14 +1,10 @@
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
-const express = require('express')
+const express = require('express');
+const adminAuth = require('../middleware/adminAuth');
 const router = express.Router()
-
  
 const DBurl =  process.env.DBurl;
-
-router.get('/', (req, res) => {
-    res.send('<h1>Hello, pharma.js</h1>')
-});
 
 router.get('/get_unique_medicines', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
