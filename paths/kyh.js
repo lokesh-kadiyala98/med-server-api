@@ -3,9 +3,8 @@ const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
 
-const config = require('../src/config.json')
-
-const DBurl = config.DBurl;
+ 
+const DBurl =  process.env.DBurl;
 
 router.get('/', (req, res) => {
     res.send('<h1>Hello, kyh.js</h1>')

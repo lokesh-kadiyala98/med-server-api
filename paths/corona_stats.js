@@ -6,9 +6,8 @@ const cheerio = require('cheerio')
 const request = require('request')
 const schedule = require('node-schedule')
 
-const config = require('../src/config.json')
-
-const DBurl = config.DBurl;
+ 
+const DBurl =  process.env.DBurl;
 
 router.get('/', (req, res) => {
     res.send('<h1>Hello, corona_stats.js</h1>')

@@ -1,9 +1,8 @@
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient;
 
-const config = require('../src/config.json')
-
-const DBurl = config.DBurl;
+ 
+const DBurl =  process.env.DBurl;
 
 function getDiseaseSymptoms(req, res) {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {

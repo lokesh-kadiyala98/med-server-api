@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 
-const config = require('../src/config.json')
-
-const DBurl = config.DBurl;
+ 
+const DBurl =  process.env.DBurl;
 
 mongoose.connect(DBurl + '/med', {
     useNewUrlParser: true,
