@@ -83,15 +83,16 @@ schedule.scheduleJob('1 * * * * *', async () => {
 
 router.patch('/IN', async (req, res) => {
     try {
-        const result = await covid_IN_update_scrapper()
+        const result = await covid_IN_data_scrapper()
         
         if (result.status === 200)
             result.data.forEach(async (element) => {
                 await Covid_IN_stat.findOneAndUpdate({ state: element.state }, { element })
             })
 
-        res.send()
+        res.send({ message: "OK" })
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 })
