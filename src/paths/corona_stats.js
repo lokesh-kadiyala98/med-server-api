@@ -2,11 +2,12 @@ const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const express = require('express')
 const router = express.Router()
-const cheerio = require('cheerio')
-const request = require('request')
 const schedule = require('node-schedule')
 
-const DBurl =  process.env.DBurl;
+const Covid_IN_stat = require('../models/covid_IN_stat')
+const covid_IN_data_scrapper = require('../scrappers/covid_IN_data_scrapper')
+
+const DBurl =  process.env.DBurl
 
 router.get('/get_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
@@ -76,105 +77,23 @@ router.get('/get_state_data', (req, res) => {
     })
 })
 
-schedule.scheduleJob('0 8 * * *', async () => {
-    const result = await updateINData()
-
-    console.log(result)
+schedule.scheduleJob('1 * * * * *', async () => {
+    console.log('hi')
 })
 
-function updateINData() {
-    return new Promise((resolve, reject) => {
-        request({
-            method: 'GET',
-            url: 'https://www.mohfw.gov.in/#state-data'
-        }, (err, res, body) => {
-            if (err) 
-                reject(err)
-
-            let $ = cheerio.load(body);
-            let states = [], cases = [], cured = [], deceased = []
-            $('.table-striped tbody tr td').each(function(i) {
-                if(i % 5 === 1)
-                    states.push($(this).text().trim())
-                else if(i % 5 === 2)
-                    cases.push($(this).text().trim())
-                else if(i % 5 === 3)
-                    cured.push($(this).text().trim())
-                else if(i % 5 === 4)
-                    deceased.push($(this).text().trim())
+router.patch('/IN', async (req, res) => {
+    try {
+        const result = await covid_IN_update_scrapper()
+        
+        if (result.status === 200)
+            result.data.forEach(async (element) => {
+                await Covid_IN_stat.findOneAndUpdate({ state: element.state }, { element })
             })
-            for (let index = 0; index < states.length - 1; index++) {
-                let obj = {
-                    state: states[index],
-                    cases: parseInt(cases[index]),
-                    cured: parseInt(cured[index]),
-                    deceased: parseInt(deceased[index])
-                }
-                MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
-                    if (err)
-                        reject({ error: 'Database Connection: Seems like something went wrong!!' })
-                    else {
-                        const db = client.db('med')
-                        db.collection('corona_data_in_states').updateOne({state: states[index]}, {$set: obj}, (err, res) => {
-                            if (err) 
-                                reject(err)
-                        })
-                    }
-                })
-            }
-            resolve({status: 200, message: 'No errors', source: 'update_state_wise_data'})
-        })
-    })
-}
 
-function updateWorldData() {
-    return new Promise((resolve, reject) => {
-        request({
-            method: 'GET',
-            url: 'https://www.mohfw.gov.in/#state-data'
-        }, (err, res, body) => {
-            if (err) 
-                reject(err)
-
-            let $ = cheerio.load(body);
-            let states = [], cases = [], cured = [], deceased = []
-            $('.table-striped tbody tr td').each(function(i) {
-                if(i % 5 === 1)
-                    states.push($(this).text().trim())
-                else if(i % 5 === 2)
-                    cases.push($(this).text().trim())
-                else if(i % 5 === 3)
-                    cured.push($(this).text().trim())
-                else if(i % 5 === 4)
-                    deceased.push($(this).text().trim())
-            })
-            for (let index = 0; index < states.length - 1; index++) {
-                let obj = {
-                    state: states[index],
-                    cases: parseInt(cases[index]),
-                    cured: parseInt(cured[index]),
-                    deceased: parseInt(deceased[index])
-                }
-                MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
-                    if (err)
-                        reject({ error: 'Database Connection: Seems like something went wrong!!' })
-                    else {
-                        const db = client.db('med')
-                        db.collection('corona_data_in_states').updateOne({state: states[index]}, {$set: obj}, (err, res) => {
-                            if (err) 
-                                reject(err)
-                        })
-                    }
-                })
-            }
-            resolve({status: 200, message: 'No errors'})
-        })
-    })
-}
-
-router.get('/update_state_wise_data', async (req, res) => {
-    const result = await updateINData()
-    res.send(result)
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
 })
 
 router.get('/update_data', (req, res) => {
@@ -183,31 +102,29 @@ router.get('/update_data', (req, res) => {
             res.send({ error: err.message })
         else {
             const db = client.db('med')
-            db.collection('corona_cases_data').insertOne({ totalCases: parseInt(req.query.cases), totalDeaths: parseInt(req.query.deaths), recoveredOnDay: parseInt(req.query.recovered), date: req.query.date }, (err) => {
+            db.collection('corona_cases_data').insertOne({ 
+                totalCases: parseInt(req.query.cases), 
+                totalDeaths: parseInt(req.query.deaths), 
+                recoveredOnDay: parseInt(req.query.recovered), 
+                date: req.query.date 
+            }, (err) => {
                 if (err)
                     res.send({ error: err.message })
                 else    
                     res.send({ status: 200, message: 'No errors'})
             })
         }    
-
     })
 })
 
-router.get('/get_state_wise_data', async (req, res) => {
-    MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
-        if (err)
-            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
-        else {
-            const db = client.db('med')
-            db.collection('corona_data_in_states').find().sort({state: 1}).toArray((err, items) => {
-                if(err)
-                    res.status(400).send({ error: err.message })
-                else
-                    res.status(200).send({ items })
-            })
-        }
-    })
+router.get('/IN', async (req, res) => {
+    try {
+        const data = await Covid_IN_stat.find().sort({ state: 1 })
+        
+        res.send(data)
+    } catch (e) {
+        res.status(500).send()
+    }
 })
 
 module.exports = router
