@@ -1,12 +1,13 @@
 const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
-const express = require('express');
-const adminAuth = require('../middleware/adminAuth');
+const express = require('express')
 const router = express.Router()
- 
-const DBurl =  process.env.DBurl;
 
-router.get('/get_unique_medicines', (req, res) => {
+const adminAuth = require('../middleware/adminAuth')
+
+const DBurl =  process.env.DBurl
+
+router.get('/get_unique_medicines', adminAuth, (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
@@ -23,7 +24,7 @@ router.get('/get_unique_medicines', (req, res) => {
     })
 })
 
-router.get('/get_unique_brands', (req, res) => {
+router.get('/get_unique_brands', adminAuth, (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
@@ -40,7 +41,7 @@ router.get('/get_unique_brands', (req, res) => {
     })
 })
 
-router.get('/get_medicine_timeseries_data', (req, res) => {
+router.get('/get_medicine_timeseries_data', adminAuth, (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
@@ -98,7 +99,7 @@ router.get('/get_medicine_timeseries_data', (req, res) => {
 })
 
 
-router.get('/get_brand_timeseries_data', (req, res) => {
+router.get('/get_brand_timeseries_data', adminAuth, (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
