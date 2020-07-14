@@ -51,9 +51,9 @@ router.get('/logout', adminAuth, async (req, res) => {
 
 router.get('/logout_all_devices', adminAuth, async (req, res) => {
     try {
-        admin.tokens = []    
+        req.admin.tokens = []    
 
-        await admin.save()
+        await req.admin.save()
 
         res.send(req.admin)
     } catch (e) {
