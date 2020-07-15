@@ -66,7 +66,7 @@ router.get('/state_data', async (req, res) => {
         const data = await Covid_IN_stat.findOne({ state: req.query.state })
 
         if (!data)
-            res.send(404).send({ message: "State not found" })
+            res.status(404).send({ message: "State not found" })
         
         res.send(data)
     } catch (e) {
