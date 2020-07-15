@@ -12,8 +12,6 @@ app.use(bodyParser.json())
 
 const PORT = process.env.PORT || 5000
 
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
-
 const disease_symptoms = require('./paths/disease_symptoms')
 const user = require('./paths/user')
 const admin = require('./paths/admin')
