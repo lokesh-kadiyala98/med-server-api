@@ -9,7 +9,7 @@ const covid_IN_data_scrapper = require('../scrappers/covid_IN_data_scrapper')
 
 const DBurl =  process.env.DBurl
 
-router.get('/get_data', (req, res) => {
+router.get('/IN/timeseries_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
@@ -45,13 +45,13 @@ router.get('/get_data', (req, res) => {
     })
 })
 
-router.get('/get_unique_states', (req, res) => {
+router.get('/unique_states', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
         else {
             const db = client.db('med')
-            db.collection('corona_data_in_states').distinct('state', (err, items) => {
+            db.collection('covid_19_in_stats').distinct('state', (err, items) => {
                 if(err)
                     res.status(400).send({ error: err.message })
                 else
@@ -61,7 +61,7 @@ router.get('/get_unique_states', (req, res) => {
     })
 })
 
-router.get('/get_state_data', (req, res) => {
+router.get('/state_data', (req, res) => {
     MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
         if (err)
             res.send({ error: 'Database Connection: Seems like something went wrong!!' })
@@ -75,10 +75,6 @@ router.get('/get_state_data', (req, res) => {
             })
         }
     })
-})
-
-schedule.scheduleJob('1 * * * * *', async () => {
-    console.log('hi')
 })
 
 router.patch('/IN', async (req, res) => {
