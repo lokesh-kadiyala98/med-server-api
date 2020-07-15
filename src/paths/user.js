@@ -61,4 +61,34 @@ router.get('/logout_all_devices', userAuth, async (req, res) => {
     }
 })
 
+router.get('/profile', userAuth, async (req, res) => {
+    res.send(req.user)
+})
+
+router.patch('/profile', userAuth, async (req, res) => {
+    const validUpdateKeys = ['password', 'name', 'gender', 'dob', 'weight', 'height']
+    const updateKeys = Object.keys(req.body)
+    const isValidUpdate = updateKeys.every(updateKey => validUpdateKeys.includes(updateKey))
+
+    if (!isValidUpdate) {
+        res.status(400).send()
+    }
+
+    try {
+        
+        const user = await User.findById(req.params.id)
+
+        if (!user)
+            res.status(404).send()
+
+        updateKeys.forEach(key => user[key] = req.body[key])
+
+        await user.save()
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 module.exports = router
