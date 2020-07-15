@@ -61,20 +61,17 @@ router.get('/unique_states', (req, res) => {
     })
 })
 
-router.get('/state_data', (req, res) => {
-    MongoClient.connect(DBurl, {useUnifiedTopology: true}, async (err, client) => {
-        if (err)
-            res.send({ error: 'Database Connection: Seems like something went wrong!!' })
-        else {
-            const db = client.db('med')
-            db.collection('corona_data_in_states').find({ state: req.query.state }).toArray((err, items) => {
-                if(err)
-                    res.status(400).send({ error: err.message })
-                else
-                    res.status(200).send(items)
-            })
-        }
-    })
+router.get('/state_data', async (req, res) => {
+    try {
+        const data = await Covid_IN_stat.findOne({ state: req.query.state })
+
+        if (!data)
+            res.send(404).send({ message: "State not found" })
+        
+        res.send(data)
+    } catch (e) {
+        res.status(500).send()
+    }
 })
 
 router.patch('/IN', async (req, res) => {
