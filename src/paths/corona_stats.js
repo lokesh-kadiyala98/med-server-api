@@ -77,13 +77,15 @@ router.get('/state_data', async (req, res) => {
 router.patch('/IN', async (req, res) => {
     try {
         const result = await covid_IN_data_scrapper()
-        
+
         if (result.status === 200)
             result.data.forEach(async (element) => {
-                await Covid_IN_stat.findOneAndUpdate({ state: element.state }, { element })
+                //Mongoose's findOneAndUpdate() long pre-dates the MongoDB driver's findOneAndUpdate() function, so it uses the MongoDB driver's findAndModify()
+                //function instead. You can opt in to using the MongoDB driver's findOneAndUpdate() function using the useFindAndModify
+                await Covid_IN_stat.findOneAndUpdate({ state: element.state }, element, { useFindAndModify: false })
             })
 
-        res.send({ message: "OK" })
+        res.send({ message: "200 OK" })
     } catch (e) {
         console.log(e)
         res.status(500).send()
